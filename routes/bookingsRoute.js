@@ -32,6 +32,7 @@ router.post("/bookroom", async (req, res) => {
     );
 
     if (payment) {
+      console.log("payment done");
       try {
         const newbooking = new Booking({
           userid: user._id,

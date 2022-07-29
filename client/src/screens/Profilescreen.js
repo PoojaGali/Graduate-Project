@@ -4,8 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
-import Success from "../components/Success";
-import { Tag, Divider } from "antd";
+import { Tag } from "antd";
 const { TabPane } = Tabs;
 
 const user = JSON.parse(localStorage.getItem("currentUser"));
@@ -19,9 +18,7 @@ function Profilescreen() {
               <h1>Name : {user.name}</h1>
               <h1>Email : {user.email}</h1>
               <h1>Admin Access : {user.isAdmin ? "Yes" : "No"}</h1>
-              <div className="text-right">
-                <button className="btn btn-primary">Get Admin Access</button>
-              </div>
+              <div className="text-right"></div>
             </div>
           </div>
         </TabPane>
@@ -41,7 +38,6 @@ export const MyOrders = () => {
   const [mybookings, setmybookings] = useState([]);
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(false);
-  const [success, setsuccess] = useState(false);
   useEffect(() => {
     async function fetchData() {
       try {

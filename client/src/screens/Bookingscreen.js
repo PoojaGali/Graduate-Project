@@ -51,7 +51,6 @@ function Bookingscreen({ match }) {
       totalDays,
       totalAmount,
     };
-    console.log(bookingDetails);
 
     try {
       setloading(true);
