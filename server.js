@@ -5,8 +5,10 @@ app.use(express.json());
 const path = require("path");
 const roomsRoutes = require("./routes/roomsRoute");
 const userRoute = require("./routes/userRoute");
+const bookingsroute = require("./routes/bookingsRoute");
 app.use("/api/rooms", roomsRoutes);
 app.use("/api/users", userRoute);
+app.use("/api/bookings", bookingsroute);
 
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static("client/build"));

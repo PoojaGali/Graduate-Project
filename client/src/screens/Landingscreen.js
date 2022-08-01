@@ -15,11 +15,9 @@ function Landingscreen() {
           style={{ borderRight: "8px solid white" }}
         >
           <h2 style={{ color: "white", fontSize: "130px" }} data-aos="zoom-in">
-            UCORooms
+            UCO Rooms
           </h2>
-          <h1 style={{ color: "white" }} data-aos="zoom-out">
-            “There is only one boss. The Guest.
-          </h1>
+
           <Link to="/home">
             <button className="btn btn-primary">Get Started</button>
           </Link>

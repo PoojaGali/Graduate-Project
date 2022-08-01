@@ -40,10 +40,10 @@ function Bookingscreen({ match }) {
     fetchData();
   }, []);
 
-  async function tokenHander(token) {
-    console.log(token);
+  async function tokenHander() {
+    console.log("Hello");
     const bookingDetails = {
-      token,
+      // token,
       user: JSON.parse(localStorage.getItem("currentUser")),
       room,
       fromdate,
@@ -125,15 +125,17 @@ function Bookingscreen({ match }) {
                 <b>Total Amount : {totalAmount} /-</b>
               </h1>
 
-              <StripeCheckout
+              {/* <StripeCheckout
                 amount={totalAmount * 100}
                 shippingAddress
                 token={tokenHander}
                 stripeKey="pk_test_51LQiosIwhvGsdhVy3PMZhy6PmsgRZpypIY2ldZpuiBdFhlzQ9C2oSrIS7eJN062osl5WQOw7lbohluk9dGXOTqoA00qGJ2Mcre"
-                currency="INR"
-              >
-                <button className="btn btn-primary">Pay Now</button>
-              </StripeCheckout>
+                currency="USD"
+              > */}
+              <button className="btn btn-primary" onClick={tokenHander}>
+                Pay Now
+              </button>
+              {/* </StripeCheckout> */}
             </div>
           </div>
         </div>

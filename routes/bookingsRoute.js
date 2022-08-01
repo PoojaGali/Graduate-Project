@@ -1,75 +1,75 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
+// const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
-const stripe = require("stripe")(
-  "sk_test_51LQiosIwhvGsdhVyJohiLP5r985jeMaGYx6TtcQ6431tqGityeFmsG6FXnzOw9uo8jfKHoFUgpOIlk3mr6ZpHNaL00DBheLXQ4"
-);
+// const stripe = require("stripe")(
+//   "sk_test_51LQiosIwhvGsdhVyJohiLP5r985jeMaGYx6TtcQ6431tqGityeFmsG6FXnzOw9uo8jfKHoFUgpOIlk3mr6ZpHNaL00DBheLXQ4"
+// );
 const Booking = require("../models/booking");
 const Room = require("../models/room");
 
 router.post("/bookroom", async (req, res) => {
-  const { room, fromdate, todate, totalDays, totalAmount, user, token } =
-    req.body;
+  const { room, fromdate, todate, totalDays, totalAmount, user } = req.body;
 
+  // try {
+  // const customer = await stripe.customers.create({
+  //   email: token.email,
+  //   source: token.id,
+  // });
+
+  // const payment = await stripe.charges.create(
+  //   {
+  //     amount: totalAmount * 100,
+  //     currency: "USD",
+  //     customer: customer.id,
+  //     receipt_email: token.email,
+  //   },
+  //   {
+  //     idempotencyKey: uuidv4(),
+  //   }
+  // );
+
+  // if (payment) {
+  //   console.log("payment done");
   try {
-    const customer = await stripe.customers.create({
-      email: token.email,
-      source: token.id,
+    const newbooking = new Booking({
+      userid: user._id,
+      room: room.name,
+      roomid: room._id,
+      totalDays: totalDays,
+      fromdate: moment(fromdate).format("DD-MM-YYYY"),
+      todate: moment(todate).format("DD-MM-YYYY"),
+      totalAmount: totalAmount,
+      transactionId: "1234",
+      status: "booked",
+    });
+    console.log(newbooking);
+
+    await newbooking.save(async (err, booking) => {
+      const oldroom = await Room.findOne({ _id: room._id });
+
+      oldroom.currentbookings.push({
+        bookingid: booking._id,
+        fromdate: moment(fromdate).format("DD-MM-YYYY"),
+        todate: moment(todate).format("DD-MM-YYYY"),
+        userid: user._id,
+        status: "booked",
+      });
+      await oldroom.save();
     });
 
-    const payment = await stripe.charges.create(
-      {
-        amount: totalAmount * 100,
-        currency: "inr",
-        customer: customer.id,
-        receipt_email: token.email,
-      },
-      {
-        idempotencyKey: uuidv4(),
-      }
-    );
-
-    if (payment) {
-      console.log("payment done");
-      try {
-        const newbooking = new Booking({
-          userid: user._id,
-          room: room.name,
-          roomid: room._id,
-          totalDays: totalDays,
-          fromdate: moment(fromdate).format("DD-MM-YYYY"),
-          todate: moment(todate).format("DD-MM-YYYY"),
-          totalAmount: totalAmount,
-          transactionId: "1234",
-          status: "booked",
-        });
-
-        await newbooking.save(async (err, booking) => {
-          const oldroom = await Room.findOne({ _id: room._id });
-
-          oldroom.currentbookings.push({
-            bookingid: booking._id,
-            fromdate: moment(fromdate).format("DD-MM-YYYY"),
-            todate: moment(todate).format("DD-MM-YYYY"),
-            userid: user._id,
-            status: "booked",
-          });
-          await oldroom.save();
-        });
-
-        res.send("Room Booked Successfully");
-      } catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: error });
-      }
-    } else {
-      res.send("Payment failed");
-    }
+    res.send("Room Booked Successfully");
   } catch (error) {
-    return res.status(400).json({ message: "Something went wrong" + error });
+    console.log(error);
+    return res.status(400).json({ message: error });
   }
+  // } else {
+  //   res.send("Payment failed");
+  // }
+  // } catch (error) {
+  //   return res.status(400).json({ message: "Something went wrong" + error });
+  // }
 });
 
 router.post("/cancelbooking", async (req, res) => {
